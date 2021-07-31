@@ -56,5 +56,4 @@ The usual way is to have some dictionary, run against it, fix scripts when neede
 
 ## License
 
-There are some materials, which were licensed under CC BY-SA 3.0 and GFDL.
-Code hereby use the same license.
+There are some materials, which were licensed under CC BY-SA 3.0 and GFDL. The rest can be Public Domain.
