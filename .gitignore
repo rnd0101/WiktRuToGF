@@ -1,0 +1,11 @@
+bin
+include
+lib
+venv
+lib64
+pyvenv.cfg
+.idea/
+__pycache__
+*.pyc
+*.pyo
+page_cache

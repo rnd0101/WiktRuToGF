@@ -1,0 +1,5 @@
+cyrtranslit==0.4
+beautifulsoup4==4.9.1
+requests
+wikitextparser==0.36.1
+lxml
