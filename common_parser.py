@@ -3,6 +3,7 @@ import os
 import re
 import subprocess
 from hashlib import sha1
+from os.path import abspath
 
 from bs4 import BeautifulSoup
 
@@ -41,6 +42,9 @@ def from_cache(title):
 
 def to_cache(title, page):
     title = title.replace("&quot;", '"')
+    if not page:
+        print(f"! {title} empty")
+        return
     cache_location = os.path.join(ARTICLE_CACHE, slugify_article(title))
     with open(cache_location, "wt") as outfile:
         outfile.write(page)
@@ -49,9 +53,10 @@ def to_cache(title, page):
 def get_article(name, file_path):
     page = from_cache(name)
     if page is None:
+        abs_path = abspath(file_path)
         cmd = (
-            '/usr/bin/grep', "'<title>{}</title>'".format(name.replace('"', "&quot;")), '-A', '10000', '-B', '3',
-            file_path)
+            '/usr/bin/grep', "<title>{}</title>".format(name.replace('"', "&quot;")), '-A', '10000', '-B', '3',
+            abs_path)
         print("CMD: {}".format(" ".join(cmd)))
         s = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE)
         output = s.communicate()[0].decode("utf-8")

@@ -19,6 +19,7 @@ NOUN_RU_NEW_RE = re.compile(r"([{][{]сущ-ru\s*[|]\s*([^ |}]+)\s*[|]\s*([^}]+?
 REDIRECT_RE = re.compile(r'#перенаправление\s+\[\[Шаблон:(.+?)\]\]')
 PO_SLOGAM_RE = re.compile(r"[{][{]по-слогам[^}]+[}][}]")
 PO_SLOGAM2_RE = re.compile(r"[|]\s*слоги\s*=\s*[{][^}]+[}][}]")
+PROPER_NOUN_RE = re.compile("[{][{]собств.[|]ru|[{][{]топоним")
 
 
 def get_noun(text):
@@ -167,7 +168,7 @@ def call_template(parsed_template, template_params):
 
 
 def slug(s):
-    return cyrtranslit.to_latin(s, "ru").replace("'", "q").replace("#", "6").replace("-", "_")
+    return cyrtranslit.to_latin(s, "ru").replace("'", "q").replace("#", "6").replace("-", "_").replace(" ", "_")
 
 
 def gf_lexicon(data, orig_tpl):
@@ -220,6 +221,7 @@ def zal_index(features):
 
 def gf_lexicon2(data, orig_tpl, features):
     pluralia_tantum = "pt=1" in orig_tpl
+    fun = ["N", "PN"][bool(data.get("proper"))]
     if data["Adjective"]:
         # zhivotnoe_N = mkN (mkA "животный") Neut Animate ;  -- wikt: сущ ru n a (п 1a)
         if data["word"].endswith("щая") or data["word"].endswith("щее") \
@@ -234,8 +236,9 @@ def gf_lexicon2(data, orig_tpl, features):
         else:
             data["nom-sg"] = data["word"]
         word_slug = slug(data["word"]).strip()
-        res = """  {}_N = mkN (mkA "{}") {} {}{} ;  -- wikt: {}""".format(
+        res = """  {}_N = mk{} (mkA "{}") {} {}{} ;  -- wikt: {}""".format(
             word_slug,
+            fun,
             data["nom-sg"],
             data.get("Gender", ""),
             data.get("Animacy", ""),
@@ -249,8 +252,10 @@ def gf_lexicon2(data, orig_tpl, features):
     z = zal_index(features)
     data["nom-sg"] = data.get("nom-sg", "") or data["word"]
     word_slug = slug(data["word"]).strip()
-    res = """  {}_N = mkN "{}" {} {} {}{} ;  -- wikt: {}""".format(
+    res = """  {}_{} = mk{} "{}" {} {} {}{} ;  -- wikt: {}""".format(
         word_slug,
+        fun,
+        fun,
         data["nom-sg"],
         data.get("Gender", ""),
         data.get("Animacy", ""),
@@ -308,7 +313,9 @@ def transform_article(article_xml, format, nominative, xml_dump_path, output_fil
         instantiated = call_template(parsed_template, template_params)
     else:
         noun_invokation = "|".join(noun_tpl)
+
     instantiated["word"] = nominative  # ???
+    instantiated["proper"] = bool(PROPER_NOUN_RE.search(article_text) or nominative[0].isupper())
     instantiated["Gender"] = noun_features["gender"]
     instantiated["Animacy"] = noun_features["animacy"]
     instantiated["Form"] = noun_features["form"]

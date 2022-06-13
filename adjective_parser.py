@@ -54,7 +54,7 @@ MAP_stemS = {
 
 
 def slug(s):
-    return cyrtranslit.to_latin(s, "ru").replace("'", "q").replace("#", "6").replace("-", "_")
+    return cyrtranslit.to_latin(s, "ru").replace("'", "q").replace("#", "6").replace("-", "_").replace(" ", "_")
 
 
 ZALIZNYAK_INDEX_RE = re.compile(r"""прил ru ([0-8](?:(?:[*°]|)(?:[abcdef'"/]{0,4})))?""")
@@ -65,6 +65,8 @@ ZALIZNYAK_INDEX_PARSE_RE = re.compile(r"""([0-8])(?:([*°]|)([abc]['"]?|[abc]['"
 
 
 def zal_index(txt):
+    if not txt:
+        return
     m = ZALIZNYAK_INDEX_PARSE_RE.match(txt)
     if m:
         num, ast, stress = m.groups()  # ('2', '*', 'a')

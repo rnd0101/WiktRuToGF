@@ -9,7 +9,6 @@ from template_utils import stems
 
 IMPERSONAL_IF_RE = re.compile(r"[#]if:[{][{][{]безличный|[}][}][}][|].{0,2}[|]")
 
-
 EXAMPLE = """
 |Я          ={{{основа2}}}у́
 |Я (прош.)  ={{{основа}}}а́л<br />{{{основа}}}а́ла
@@ -34,7 +33,6 @@ EXAMPLE = """
 |Будущее    = буду/будешь... {{{основа}}}а́ть
 |Инфинитив = {{{основа}}}а́ть
 """
-
 
 FORM_MAPPING = {
     "Я": "PresSgP1",
@@ -66,7 +64,6 @@ FORM_MAPPING = {
     "ДеепрНаст": "PresTransgressive",
     "ДеепрПрош": "PastTransgressive",
 }
-
 
 
 def map_aspect(v):

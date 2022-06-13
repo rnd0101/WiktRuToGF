@@ -81,7 +81,7 @@ def call_template(parsed_template, template_params):
 
 
 def slug(s):
-    return cyrtranslit.to_latin(s, "ru").replace("'", "q").replace("#", "6").replace("-", "_")
+    return cyrtranslit.to_latin(s, "ru").replace("'", "q").replace("#", "6").replace("-", "_").replace(" ", "_")
 
 
 def gf_lexicon(data, orig_tpl):
