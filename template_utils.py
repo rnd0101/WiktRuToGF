@@ -6,6 +6,7 @@ import unicodedata
 NOINCLUDE_RE = re.compile(r"<noinclude>.*?</noinclude>|<!--.*?-->", re.MULTILINE|re.DOTALL)
 FIELD_RE = re.compile(r"[|]\s*([^=|]+?)\s*=([^=|]*?)(?:<|$)", re.MULTILINE|re.DOTALL)
 stem_RE = re.compile(r"[{][{][{](основа\d?)[}][}][}]([\w]+)")
+inner_RE = re.compile(r"[|][{][{][{](основа\d?)[}][}][}]")
 
 ACCENT_MAPPING = {
     '́': '',
@@ -58,6 +59,7 @@ def wtp_parser(s):
 
 def get_fields(text):
     text = NOINCLUDE_RE.sub("", text)
+    text = inner_RE.sub("", text)
     rv = [(name, value) for name, value in FIELD_RE.findall(text)]
     return rv
 
@@ -73,7 +75,7 @@ if __name__ == "__main__":
     # p = wtp.parse(example)
     # funcs = p.parser_functions[0]
 
-    get_fields(('{{Гл-блок\n'
+    print(get_fields(('{{Гл-блок\n'
  '\n'
  '|Я          ={{{основа1}}}у\n'
  '|Я (прош.) ={{{основа2}}}<br />{{{основа1}}}ла\n'
@@ -103,4 +105,4 @@ if __name__ == "__main__":
  '|соотв={{{соотв|}}}\n'
  '|соотв-мн={{{соотв-мн|}}}\n'
  '}}')
-)
+))
