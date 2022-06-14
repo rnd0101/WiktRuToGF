@@ -4,7 +4,7 @@ import unicodedata
 
 NOINCLUDE_RE = re.compile(r"<noinclude>.*?</noinclude>|<!--.*?-->", re.MULTILINE|re.DOTALL)
 FIELD_RE = re.compile(r"[|]\s*([^=|]+?)\s*=([^=|]*?)(?:<|$)", re.MULTILINE|re.DOTALL)
-stem_RE = re.compile(r"[{][{][{](основа\d?)[}][}][}]([\w]+)")
+stem_RE = re.compile(r"[{][{][{](основа\d?)[}][}][}]([\w]*)\s*$")
 inner_RE = re.compile(r"[|][{][{][{](основа\d?)[}][}][}]")
 
 ACCENT_MAPPING = {
