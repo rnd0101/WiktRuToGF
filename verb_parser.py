@@ -12,10 +12,10 @@ from template_utils import wtp_parser
 from verb_template_parser import get_fields
 from verb_template_parser import parse_mw_template
 
-GLAGOL_RU_RE = re.compile(r"([{][{](гл\s+ru\s+[^|\s]+|гл\s+ru).+?\s*[}][}])\s*$", re.DOTALL | re.MULTILINE)
+GLAGOL_RU_RE = re.compile(r"([{][{](гл\s+ru\s+[^|\s]+|гл\s+ru(?![a-z])).+?\s*[}][}])\s*$", re.DOTALL | re.MULTILINE)
 REDIRECT_RE = re.compile(r'#перенаправление\s+\[\[Шаблон:(.+?)]]')
 PO_SLOGAM_RE = re.compile(r"[{][{][^}]по-слогам+?[}][}]")
-PO_SLOGAM2_RE = re.compile(r"[|]\s*слоги\s*=[^\n]*")
+PO_SLOGAM2_RE = re.compile(r"[|]\s*слоги\s*=[^\n}]*")
 
 
 def get_glagol(text):
@@ -209,11 +209,11 @@ def transform_article(article_xml, format, infinitive, xml_dump_path, output_fil
 
     template_params = get_invokation_params(glagol_invokation)
     parsed_template = parse_mw_template(template_text)
-    # print("-----------------")
+    # print("--------parsed_template---------")
     # print(parsed_template)
     # print("-----------------")
     # print(template_params)
-    # print("-----------------")
+    # print("------template_params-----------")
     instantiated = call_template(parsed_template, template_params)
     if instantiated.get("Aspect"):
         if aspect:
