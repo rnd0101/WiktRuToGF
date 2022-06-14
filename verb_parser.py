@@ -13,12 +13,14 @@ from verb_template_parser import get_fields
 from verb_template_parser import parse_mw_template
 
 GLAGOL_RU_RE = re.compile(r"([{][{](гл\s+ru\s+[^|\s]+|гл\s+ru).+?\s*[}][}])\s*$", re.DOTALL | re.MULTILINE)
-REDIRECT_RE = re.compile(r'#перенаправление\s+\[\[Шаблон:(.+?)\]\]')
-PO_SLOGAM_RE = re.compile(r"[|]\s*слоги\s*=\s*[{][^}]+[}][}]")
+REDIRECT_RE = re.compile(r'#перенаправление\s+\[\[Шаблон:(.+?)]]')
+PO_SLOGAM_RE = re.compile(r"[{][{][^}]по-слогам+?[}][}]")
+PO_SLOGAM2_RE = re.compile(r"[|]\s*слоги\s*=[^\n]*")
 
 
 def get_glagol(text):
     text = PO_SLOGAM_RE.sub("", text)
+    text = PO_SLOGAM2_RE.sub("", text)
     m = GLAGOL_RU_RE.search(text)
     if m:
         templ_name, templ_body = m.groups()
@@ -204,6 +206,7 @@ def transform_article(article_xml, format, infinitive, xml_dump_path, output_fil
         print("REDIR: {} -> {}".format(glagol_tpl, glagol_tpl1))
         template_xml = get_article(ns.format(glagol_tpl1), xml_dump_path)
         template_text = parse_article(template_xml)["text"]
+
     template_params = get_invokation_params(glagol_invokation)
     parsed_template = parse_mw_template(template_text)
     # print("-----------------")
