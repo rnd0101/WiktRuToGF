@@ -2,9 +2,9 @@ import re
 
 import unicodedata
 
-NOINCLUDE_RE = re.compile(r"<noinclude>.*?</noinclude>|<!--.*?-->", re.MULTILINE|re.DOTALL)
-FIELD_RE = re.compile(r"[|]\s*([^=|]+?)\s*=([^=|]*?)(?:<|$)", re.MULTILINE|re.DOTALL)
-stem_RE = re.compile(r"[{][{][{](основа\d?)[}][}][}]([\w]*)\s*$")
+NOINCLUDE_RE = re.compile(r"<noinclude>.*?</noinclude>|<!--.*?-->", re.MULTILINE | re.DOTALL)
+FIELD_RE = re.compile(r"[|]\s*([^=|]+?)\s*=([^=|]*?)(?:<|$)", re.MULTILINE | re.DOTALL)
+stem_RE = re.compile(r"[{][{][{](основа\d?(?:/основа\d?)?)[}][}][}]([\w]*)\s*$")
 inner_RE = re.compile(r"[|][{][{][{](основа\d?)[}][}][}]")
 
 ACCENT_MAPPING = {
@@ -57,9 +57,13 @@ def wtp_parser(s):
     return parsed.pformat().replace("\n        ", " ")
 
 
+def _repl_default(m):
+    return "/" + m.group(1)
+
+
 def get_fields(text):
     text = NOINCLUDE_RE.sub("", text)
-    text = inner_RE.sub("", text)
+    text = inner_RE.sub(_repl_default, text)
     rv = [(name, value) for name, value in FIELD_RE.findall(text)]
     return rv
 
@@ -106,4 +110,4 @@ if __name__ == "__main__":
 |соотв-мн={{{соотв-мн|}}}
 }}"""
     )
-))
+    ))

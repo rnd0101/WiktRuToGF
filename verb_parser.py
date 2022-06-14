@@ -49,11 +49,14 @@ def call_template(parsed_template, template_params):
         if isinstance(values, (list, set, tuple)):
             computed = []
             for varname, postfix in values:
-                try:
-                    t = unaccentify(template_params[varname] + postfix)
+                r = None
+                for key in varname.split("/"):
+                    r = template_params.get(key)
+                    if r:
+                        break
+                if r is not None:
+                    t = unaccentify(r + postfix)
                     computed.append(t)
-                except KeyError:
-                    pass
             called[k] = computed
         else:
             called[k] = values
