@@ -145,7 +145,7 @@ def gf_lexicon2(data, orig_tpl):
     transitivity = data.get("Transitivity", "Transitive")
     if data["Inf"].endswith("йти") or data["Inf"].endswith("дать") \
             or data["Inf"].endswith("йтись") or data["Inf"].endswith("даться"):
-        res = """  -- {}_V = mkV {} {} "{}" ;  ---- {}""".format(
+        res = """  {}_V = mkV {} {} "{}" ;  ---- {}""".format(
             slug(data["Inf"]),
             aspect.lower(),
             transitivity.lower(),
